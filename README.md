@@ -2,7 +2,7 @@
 
 Consider a neural network with the following structure:
 
-![[graph.png]]
+![graph](graph.png)
 the number of neurons in each layer is given by:
 
 -   **Input layer**: n neurons
