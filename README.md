@@ -1,4 +1,4 @@
-#We aim to investigate the relationship between the weights of a neural network and the complexity of the functions it learns. To do this, we will train a neural network using binary functions as inputs. Each binary function will be labeled with a unique identifier, μ. We will record the weight matrices corresponding to each function and analyze the relationship between these weights and the input functions.
+**We aim to investigate the relationship between the weights of a neural network and the complexity of the functions it learns. To do this, we will train a neural network using binary functions as inputs. Each binary function will be labeled with a unique identifier, μ. We will record the weight matrices corresponding to each function and analyze the relationship between these weights and the input functions.**
 
 Consider a neural network with the following structure:
 
