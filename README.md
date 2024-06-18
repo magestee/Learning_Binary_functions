@@ -50,10 +50,7 @@ While ReLU is popular due to its simplicity and effectiveness in deep networks, 
 Instead, we should consider using the sigmoid function, defined as:
 
 $$
-
 \sigma\left( \sum_{i}  z_{ij} w_{ij} + b_j \right) = \frac{1}{1 + e^{-\sum_{i} z_{ij} w_{ij} + b_j}}
-
-
 $$
 
 The sigmoid function is effective because it outputs values in the range $(0, 1)$, which can be easily transformed to match our binary output requirements of $-1$ and $+1$. It introduces non-linearity into the model, enabling the network to learn complex patterns. Moreover, the sigmoid function has a smooth gradient, which helps in the effective adjustment of weights during the learning process without causing the issues of gradient saturation as severely as tanh.
