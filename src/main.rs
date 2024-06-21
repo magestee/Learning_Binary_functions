@@ -3,25 +3,9 @@ fn main() {
 
    let outputs = generate_all_binary_inputs(size);
 
-   /*
    for output in &outputs {
        println!("{:?}", output)
    }
-   for (key, value) in &outputs {
-       println!("{}:{:?}", key, value);
-   }
-   */
-
-   // let trainingset = genrate_the_trainingset(outputs);
-   //genrate_the_trainingset(outputs)
-   
-   let even = make_fibonacci_num_vec(outputs);
-
-
-   for (key, value) in &even {
-       println!("{:?},{}", key, value)
-   }
-
 }
 
 struct TrainingSet {
