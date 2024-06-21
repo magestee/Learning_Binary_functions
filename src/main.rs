@@ -1,8 +1,15 @@
+use std::usize;
+
 fn main() {
-   let size = 8;
+   let n = 8_usize;
+   let m = 2_usize.pow(n as u128);
 
-   let outputs = generate_binary_vectors(size);
+   let inputs = generate_binary_vectors(n);
+   let outputs = generate_binary_vectors(m);
 
+   for input in &inputs {
+       println!("{:?}", input)
+   }
    for output in &outputs {
        println!("{:?}", output)
    }
@@ -10,12 +17,11 @@ fn main() {
 
 struct TrainingSet {
     mu: i32,
-    input: Vec<i32>,
-    output: Vec<i32>,
+    set: Vec<(Vec<i32>, i32)>,
 }
 
-fn generate_binary_vectors(n: u32) -> Vec<Vec<i32>> {
-    let num_combinations = 2_usize.pow(n);
+fn generate_binary_vectors(n: usize) -> Vec<Vec<i32>> {
+    let num_combinations = 2_usize.pow(n as u32);
     let mut outputs = Vec::with_capacity(num_combinations); 
 
     for i in 0..num_combinations {
@@ -32,7 +38,6 @@ fn generate_binary_vectors(n: u32) -> Vec<Vec<i32>> {
     
     outputs
 }
-
 /*
 fn genrate_the_trainingset(n: Vec<Vec<i32>>) -> Vec<TrainingSet>{
     let training_set = Vec::new();
@@ -41,13 +46,5 @@ fn genrate_the_trainingset(n: Vec<Vec<i32>>) -> Vec<TrainingSet>{
     for (index, value) in n.iter().enumerate() {
         println!("{}:{:?}",index, value)
     }
-
-    
-    TrainingSet {
-        mu: n.len() as i32,
-        input: Vec::new(),
-        output: Vec::new()
-    }
 }
 */
-
