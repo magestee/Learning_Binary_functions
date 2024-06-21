@@ -1,7 +1,7 @@
 fn main() {
-   let size = 4;
+   let size = 8;
 
-   let outputs = generate_all_binary_inputs(size);
+   let outputs = generate_binary_vectors(size);
 
    for output in &outputs {
        println!("{:?}", output)
@@ -14,7 +14,7 @@ struct TrainingSet {
     output: Vec<i32>,
 }
 
-fn generate_all_binary_inputs(n: u32) -> Vec<Vec<i32>> {
+fn generate_binary_vectors(n: u32) -> Vec<Vec<i32>> {
     let num_combinations = 2_usize.pow(n);
     let mut outputs = Vec::with_capacity(num_combinations); 
 
