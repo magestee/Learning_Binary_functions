@@ -15,7 +15,7 @@ fn main() {
    // let trainingset = genrate_the_trainingset(outputs);
    //genrate_the_trainingset(outputs)
    
-   let even = make_even_num_vec(outputs);
+   let even = make_odd_num_vec(outputs);
 
 
    for (key, value) in &even {
@@ -68,10 +68,22 @@ fn genrate_the_trainingset(n: Vec<Vec<i32>>) -> Vec<TrainingSet>{
 fn make_even_num_vec(vector: Vec<Vec<i32>>) -> Vec<(Vec<i32>, i8)>{
     let mut outputs: Vec<(Vec<i32>, i8)> = Vec::new();
     for (index, value) in vector.iter().enumerate() {
-        if index%2 == 0 {
+        if index % 2 == 0 {
             outputs.push((value.to_vec(), 1))
         } else {
-             outputs.push((value.to_vec(), -1))
+            outputs.push((value.to_vec(), -1))
+        }
+    }
+    outputs
+}
+
+fn make_odd_num_vec(vector: Vec<Vec<i32>>) -> Vec<(Vec<i32>, i8)>{
+    let mut outputs: Vec<(Vec<i32>, i8)> = Vec::new();
+    for (index, value) in vector.iter().enumerate() {
+        if index % 2 != 0 {
+            outputs.push((value.to_vec(), 1))
+        } else {
+            outputs.push((value.to_vec(), -1))
         }
     }
     outputs
