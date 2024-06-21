@@ -1,5 +1,5 @@
 fn main() {
-   let size = 20;
+   let size = 2;
 
    let outputs = generate_all_binary_inputs(size);
 
@@ -13,7 +13,15 @@ fn main() {
    */
 
    // let trainingset = genrate_the_trainingset(outputs);
-   genrate_the_trainingset(outputs)
+   //genrate_the_trainingset(outputs)
+   
+   let even = make_even_num_vec(outputs);
+
+
+   for (key, value) in &even {
+       println!("{:?},{}", key, value)
+   }
+
 }
 
 struct TrainingSet {
@@ -40,18 +48,31 @@ fn generate_all_binary_inputs(n: u32) -> Vec<Vec<i32>> {
     
     outputs
 }
+/*
+fn genrate_the_trainingset(n: Vec<Vec<i32>>) -> Vec<TrainingSet>{
+    let training_set = Vec::new();
+    let outputs = Vec::with_capacity(n.len());
 
-fn genrate_the_trainingset(n: Vec<Vec<i32>>){
-    //training_sets = Vec::new();
     for (index, value) in n.iter().enumerate() {
         println!("{}:{:?}",index, value)
     }
 
-    /*
+    
     TrainingSet {
         mu: n.len() as i32,
         input: Vec::new(),
         output: Vec::new()
     }
-    */
+}
+*/
+fn make_even_num_vec(vector: Vec<Vec<i32>>) -> Vec<(Vec<i32>, i8)>{
+    let mut outputs: Vec<(Vec<i32>, i8)> = Vec::new();
+    for (index, value) in vector.iter().enumerate() {
+        if index%2 == 0 {
+            outputs.push((value.to_vec(), 1))
+        } else {
+             outputs.push((value.to_vec(), -1))
+        }
+    }
+    outputs
 }
