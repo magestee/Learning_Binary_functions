@@ -28,7 +28,7 @@ fn main() -> std::io::Result<()> {
     match collection {
         Ok(col) => {
             let mut accuracies = Vec::new();
-            let datasets_to_process = col.data_sets.iter().take(1000);  // Limit to 1000 datasets
+            let datasets_to_process = col.data_sets.iter().take(20000);  // Limit to 1000 datasets
 
             for dataset in datasets_to_process {
                 let accuracy = model::process_dataset(dataset);
