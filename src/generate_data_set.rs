@@ -51,7 +51,7 @@ fn generate_binary_vectors(n: usize) -> Vec<Vec<i32>> {
             if (i & (1 << j)) != 0 {
                 combination.insert(0, 1);
             } else {
-                combination.insert(0, -1);
+                combination.insert(0, 0);
             }
         }
         combinations.push(combination);
