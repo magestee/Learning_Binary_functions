@@ -1,5 +1,13 @@
+use serde::Serialize;
+use serde_json;
 use std::fs::File;
 use std::io::{self, Write};
+
+#[derive(Serialize)]
+struct Data {
+    exponentiation_result: u32,
+    binary_vectors: Vec<Vec<i32>>,
+}
 
 fn main() -> io::Result<()> {
     // Set n to 2^3
@@ -11,9 +19,15 @@ fn main() -> io::Result<()> {
     // Generate binary vectors for n
     let inputs = generate_binary_vectors(n);
 
-    // Write inputs and m to a CSV file
-    let file_path = "binary_vectors.csv";
-    write_vectors_and_m_to_csv(&inputs, m, file_path)?;
+    // Create data structure for JSON serialization
+    let data = Data {
+        exponentiation_result: m,
+        binary_vectors: inputs,
+    };
+
+    // Serialize to JSON and write to file
+    let file_path = "binary_vectors.json";
+    write_to_json_file(&data, file_path)?;
     Ok(())
 }
 
@@ -36,23 +50,9 @@ fn generate_binary_vectors(n: usize) -> Vec<Vec<i32>> {
     outputs
 }
 
-fn write_vectors_and_m_to_csv(vectors: &Vec<Vec<i32>>, m: u32, file_path: &str) -> io::Result<()> {
+fn write_to_json_file(data: &Data, file_path: &str) -> io::Result<()> {
     let mut file = File::create(file_path)?;
-    
-    // Write the value of m at the top of the CSV
-    writeln!(file, "2^(2^3) = {}", m)?;
-
-    // Write a separator for clarity
-    writeln!(file, "Binary vectors:")?;
-    
-    // Write the binary vectors in CSV format
-    for vector in vectors {
-        let line = vector.iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>()
-            .join(",");
-        writeln!(file, "[{}]", line)?;
-    }
-    
+    let json_data = serde_json::to_string_pretty(&data)?;
+    file.write_all(json_data.as_bytes())?;
     Ok(())
 }
