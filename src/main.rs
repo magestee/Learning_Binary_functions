@@ -1,4 +1,3 @@
-use num_bigint::BigUint;
 use std::fs::File;
 use std::io::{self, Write};
 
@@ -6,25 +5,15 @@ fn main() -> io::Result<()> {
     // Set n to 2^3
     let n = 2_usize.pow(3);
     
-    // Calculate 2^n to demonstrate the use of BigUint
-    let base = BigUint::from(2_u32);
-    let m = base.pow(n as u32); // 2^n
-
-    println!("2^3 = {}", n);
-    println!("2^(2^3) = {}", m);
+    // Calculate 2^n using u32
+    let m = 2_u32.pow(n as u32); // 2^n
 
     // Generate binary vectors for n
     let inputs = generate_binary_vectors(n);
 
-    // Write inputs and m to a file
-    let file_path = "binary_vectors.txt";
-    write_vectors_and_m_to_file(&inputs, &m, file_path)?;
-
-    let outputs = generate_binary_vectors(n);
-
-    // Write inputs and m to a file
-    let outputs_file_path = "binary_vectors_outputs.txt";
-    write_vectors_and_m_to_file(&outputs, &m, outputs_file_path );
+    // Write inputs and m to a CSV file
+    let file_path = "binary_vectors.csv";
+    write_vectors_and_m_to_csv(&inputs, m, file_path)?;
     Ok(())
 }
 
@@ -47,22 +36,22 @@ fn generate_binary_vectors(n: usize) -> Vec<Vec<i32>> {
     outputs
 }
 
-fn write_vectors_and_m_to_file(vectors: &Vec<Vec<i32>>, m: &BigUint, file_path: &str) -> io::Result<()> {
+fn write_vectors_and_m_to_csv(vectors: &Vec<Vec<i32>>, m: u32, file_path: &str) -> io::Result<()> {
     let mut file = File::create(file_path)?;
     
-    // Write the value of m
+    // Write the value of m at the top of the CSV
     writeln!(file, "2^(2^3) = {}", m)?;
-    
+
     // Write a separator for clarity
     writeln!(file, "Binary vectors:")?;
     
-    // Write the binary vectors
+    // Write the binary vectors in CSV format
     for vector in vectors {
         let line = vector.iter()
             .map(|x| x.to_string())
             .collect::<Vec<String>>()
-            .join(", ");
-        writeln!(file, "{}", line)?;
+            .join(",");
+        writeln!(file, "[{}]", line)?;
     }
     
     Ok(())
