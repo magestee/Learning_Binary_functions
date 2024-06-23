@@ -89,12 +89,12 @@ impl NeuralNetwork {
     }
 }
 
-pub fn process_dataset(dataset: &DataSet) {
+pub fn process_dataset(dataset: &DataSet) -> f64 {
     println!("Processing DataSet with mu = {}", dataset.mu);
     for (input, output) in dataset.inputs.iter().zip(&dataset.output) {
         println!("Input: {:?}, Output: {}", input, output);
     }
-    let mut nn = NeuralNetwork::new(4, 8); // 4 inputs, 3 neurons in hidden layer
+    let mut nn = NeuralNetwork::new(4, 18); // 4 inputs, 18 neurons in hidden layer
     let split_at = dataset.inputs.len() * 80 / 100;
     let (train_inputs, test_inputs) = dataset.inputs.split_at(split_at);
     let (train_outputs, test_outputs) = dataset.output.split_at(split_at);
@@ -112,4 +112,5 @@ pub fn process_dataset(dataset: &DataSet) {
 
     let accuracy = correct_predictions as f64 / test_inputs.len() as f64 * 100.0;
     println!("Test Accuracy: {:.2}%", accuracy);
+    accuracy // Return the accuracy here
 }

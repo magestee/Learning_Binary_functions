@@ -1,5 +1,4 @@
 // main.rs
-
 mod generate_data_set;
 mod model;
 
@@ -18,8 +17,9 @@ fn main() -> std::io::Result<()> {
     match collection {
         Ok(col) => {
             // Find the dataset with mu = 1
-            if let Some(dataset) = col.data_sets.iter().find(|d| d.mu == 256) {
-                model::process_dataset(dataset); // Process this dataset in model.rs
+            if let Some(dataset) = col.data_sets.iter().find(|d| d.mu == 777) {
+                let test_accuracy = model::process_dataset(dataset); // Capture the returned accuracy
+                println!("Accessed Test Accuracy: {:.2}%", test_accuracy);
             } else {
                 println!("No dataset with mu = 1 found.");
             }
