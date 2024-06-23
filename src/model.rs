@@ -11,14 +11,15 @@ pub struct NeuralNetwork {
 }
 
 impl NeuralNetwork {
-pub fn new(input_size: usize, hidden_size: usize) -> Self {
+
+    pub fn new(input_size: usize, hidden_size: usize) -> Self {
         let mut rng = thread_rng();
         // Initialize weights with smaller values to prevent saturation of sigmoid at the start
         let input_weights = (0..input_size)
             .map(|_| (0..hidden_size).map(|_| rng.gen_range(-0.1..0.1)).collect())
             .collect();
-        // Ensure hidden_weights are initialized to match the number of hidden inputs
-        let hidden_weights = (0..input_size).map(|_| rng.gen_range(-0.1..0.1)).collect(); // Adjust this if input_size is not the intended size
+        // Ensure hidden_weights are initialized to match the number of hidden neurons
+        let hidden_weights = (0..hidden_size).map(|_| rng.gen_range(-0.1..0.1)).collect();
         let bias = rng.gen_range(-0.1..0.1);
 
         NeuralNetwork {
@@ -27,6 +28,7 @@ pub fn new(input_size: usize, hidden_size: usize) -> Self {
             bias,
         }
     }
+
     pub fn sigmoid(x: f64) -> f64 {
         1.0 / (1.0 + E.powf(-x))
     }
@@ -48,23 +50,23 @@ pub fn new(input_size: usize, hidden_size: usize) -> Self {
                 let prediction = Self::sigmoid(final_input);
                 let error = target as f64 - prediction;
 
-                if hidden_outputs.len() != self.hidden_weights.len() {
-                    // Debugging line: print to see if the dimensions mismatch
-                    println!("Dimension mismatch: hidden_outputs.len() = {}, hidden_weights.len() = {}", hidden_outputs.len(), self.hidden_weights.len());
-                    continue; // Skip this iteration to avoid panic
-                }
-
-                // Backpropagation updates
+                // Backpropagation updates for hidden_weights
                 for (i, output) in hidden_outputs.iter().enumerate() {
-                    self.hidden_weights[i] += learning_rate * error * Self::sigmoid_derivative(final_input) * output;
-                }
-
-                for (i, input_val) in input_f64.iter().enumerate() {
-                    for j in 0..self.input_weights[i].len() {
-                        self.input_weights[i][j] += learning_rate * error * Self::sigmoid_derivative(hidden_inputs[j]) * input_val;
+                    if i < self.hidden_weights.len() {
+                        self.hidden_weights[i] += learning_rate * error * Self::sigmoid_derivative(final_input) * output;
                     }
                 }
 
+                // Update input_weights
+                for (i, input_val) in input_f64.iter().enumerate() {
+                    for (j, weight) in self.input_weights[i].iter_mut().enumerate() {
+                        if j < hidden_outputs.len() {
+                            *weight += learning_rate * error * Self::sigmoid_derivative(hidden_inputs[j]) * input_val * hidden_outputs[j];
+                        }
+                    }
+                }
+
+                // Update bias
                 self.bias += learning_rate * error * Self::sigmoid_derivative(final_input);
             }
         }
@@ -92,7 +94,7 @@ pub fn process_dataset(dataset: &DataSet) {
     for (input, output) in dataset.inputs.iter().zip(&dataset.output) {
         println!("Input: {:?}, Output: {}", input, output);
     }
-    let mut nn = NeuralNetwork::new(4, 3); // 4 inputs, 3 neurons in hidden layer
+    let mut nn = NeuralNetwork::new(4, 8); // 4 inputs, 3 neurons in hidden layer
     let split_at = dataset.inputs.len() * 80 / 100;
     let (train_inputs, test_inputs) = dataset.inputs.split_at(split_at);
     let (train_outputs, test_outputs) = dataset.output.split_at(split_at);

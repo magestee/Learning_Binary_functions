@@ -18,7 +18,7 @@ fn main() -> std::io::Result<()> {
     match collection {
         Ok(col) => {
             // Find the dataset with mu = 1
-            if let Some(dataset) = col.data_sets.iter().find(|d| d.mu == 1) {
+            if let Some(dataset) = col.data_sets.iter().find(|d| d.mu == 256) {
                 model::process_dataset(dataset); // Process this dataset in model.rs
             } else {
                 println!("No dataset with mu = 1 found.");
