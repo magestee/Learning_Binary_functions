@@ -16,7 +16,7 @@ struct DataCollection {
 }
 
 fn main() -> io::Result<()> {
-    let n = 2; // number of bits in each vector
+    let n = 3; // number of bits in each vector
     let number_of_inputs = 2_usize.pow(n as u32); // 2^n, producing vectors of size 4
     let number_of_outputs = 2_usize.pow(number_of_inputs as u32); // Using the same formula for outputs
 
