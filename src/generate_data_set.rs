@@ -17,13 +17,13 @@ pub struct DataCollection {
     pub data_sets: Vec<DataSet>,
 }
 
-pub fn generate_data_set(n: usize) -> io::Result<()> {
-    let number_of_inputs = 2_usize.pow(n as u32);
-    let number_of_outputs = 2_usize.pow(number_of_inputs as u32);
+pub fn generate_data_set(bits : usize) -> io::Result<()> {
+    let n = 2_usize.pow(bits as u32);
+    let m = 2_usize.pow(n as u32);
 
-    let inputs = generate_binary_vectors(n);
-    let outputs = generate_binary_vectors(number_of_inputs);
-    let mut datasets = Vec::with_capacity(number_of_outputs);
+    let inputs = generate_binary_vectors(bits);
+    let outputs = generate_binary_vectors(n);
+    let mut datasets = Vec::with_capacity(m);
 
     for (i, output) in outputs.iter().enumerate() {
         datasets.push(DataSet {
