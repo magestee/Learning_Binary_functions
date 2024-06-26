@@ -10,7 +10,7 @@ use std::path::Path;
 
 fn main() -> std::io::Result<()> {
     let dataset_file_path = "data_sets.json";
-    let n = 4; //number of bits 
+    let n = 2; //number of bits 
 
     // Check if the dataset file already exists
     if !Path::new(dataset_file_path).exists(){
