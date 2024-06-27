@@ -65,4 +65,6 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("o_w: {:?}", matric.ho_w);
     println!("b: {:?}", matric.bias);
 
+    println!("inputs: {:?}", dataset.inputs);
+    println!("inputs: {:?}", dataset.output);
 }
