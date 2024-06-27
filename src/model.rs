@@ -22,12 +22,17 @@ pub fn randomly_populate(a: &mut Weights)  {
     }
 }
 
-pub fn sigmoid(z: f64, beta: f64) -> f64 {
+fn dot_product(v1: &[f64], v2: &[f64]) -> f64 {
+    v1.iter().zip(v2.iter()).map(|(a, b)| a * b).sum()
+}
+
+pub fn sigmoid(z: f64) -> f64 {
+    let beta = 1.0;
     1.0/(1.0 + E.powf(-beta * z))
 }
 
 pub fn sigmoid_derivative(z:f64, beta: f64) -> f64 {
-    let s = sigmoid(z, beta);
+    let s = sigmoid(z);
     beta * s * (1.0 - s)
 }
 
@@ -50,14 +55,13 @@ pub fn new_network(i: usize, h: usize, o:usize) -> NeuralNetwork{
     }
 
 }
-/*
 
-impl NeuralNetwork {
-    pub fn train(&mut self, inputs: &[Vec<i32>], outputs: &[i32], epochs: usize) {
+pub fn feedforward(w_vec: Vec<f64>, b_vec: Vec<f64>, mut a: Vec<f64>) -> Vec<f64> {
+    for (w,b) in w_vec.iter().zip(b_vec.iter()) {
+        a = a.iter().map(|ai| sigmoid(w * ai + b)).collect()
     }
-    pub fn predict(&self, input: &[i32]) -> i32 {
+    a
 }
-*/
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
     let matric: NeuralNetwork = new_network(n, 5, 2);
