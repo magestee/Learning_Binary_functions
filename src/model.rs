@@ -65,13 +65,13 @@ pub fn feedforward(w_vec: Vec<f32>, b_vec: Vec<f32>, mut a: Vec<f32>) -> Vec<f32
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let matric: NeuralNetwork = new_network(n, 5, 2);
+    let matric: NeuralNetwork = new_network(n, 5, 1);
     println!("h_w: {:?}", matric.ih_w);
     println!("o_w: {:?}", matric.ho_w);
     println!("b: {:?}", matric.bias);
 
     println!("inputs: {:?}", dataset.inputs);
-    println!("inputs: {:?}", dataset.output);
+    println!("outputs: {:?}", dataset.output);
 
 
     let f = feedforward(matric.ih_w[0].clone(), matric.bias[0].clone(), dataset.inputs[0].clone());
