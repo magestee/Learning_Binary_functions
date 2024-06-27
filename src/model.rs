@@ -3,7 +3,7 @@ type Weights = Vec<Vec<f32>>;
 type Bias = Vec<Vec<f32>>;
 
 use crate::generate_data_set::DataSet;
-use std::f64::consts::E;
+use std::f32::consts::E;
 use rand::Rng;
 
 pub struct NeuralNetwork {
@@ -26,12 +26,13 @@ fn dot_product(v1: &[f64], v2: &[f64]) -> f64 {
     v1.iter().zip(v2.iter()).map(|(a, b)| a * b).sum()
 }
 
-pub fn sigmoid(z: f64) -> f64 {
+pub fn sigmoid(z: f32) -> f32 {
     let beta = 1.0;
-    1.0/(1.0 + E.powf(-beta * z))
+    let p = -beta * z;
+    1.0/(1.0 + E.powf(p))
 }
 
-pub fn sigmoid_derivative(z:f64, beta: f64) -> f64 {
+pub fn sigmoid_derivative(z:f32, beta: f32) -> f32 {
     let s = sigmoid(z);
     beta * s * (1.0 - s)
 }
@@ -58,8 +59,8 @@ pub fn new_network(i: usize, h: usize, o:usize) -> NeuralNetwork{
 
 pub fn feedforward(w_vec: Vec<f32>, b_vec: Vec<f32>, mut a: Vec<f32>) -> Vec<f32> {
     for (w,b) in w_vec.iter().zip(b_vec.iter()) {
-        a = a.iter().map(|ai| sigmoid(w * ai + b)).collect()
-    }
+        a  = a.iter().map(|ai| sigmoid(w * ai + b)).collect();
+    };
     a
 }
 
@@ -72,6 +73,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("inputs: {:?}", dataset.inputs);
     println!("inputs: {:?}", dataset.output);
 
-    let f = feedforward(matric.ih_w[0], matric.bias[0], dataset.inputs[0]);
+
+    let f = feedforward(matric.ih_w[0].clone(), matric.bias[0].clone(), dataset.inputs[0].clone());
     println!("{:?}", f)
 }
