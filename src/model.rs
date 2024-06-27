@@ -56,7 +56,7 @@ pub fn new_network(i: usize, h: usize, o:usize) -> NeuralNetwork{
 
 }
 
-pub fn feedforward(w_vec: Vec<f64>, b_vec: Vec<f64>, mut a: Vec<f64>) -> Vec<f64> {
+pub fn feedforward(w_vec: Vec<f32>, b_vec: Vec<f32>, mut a: Vec<f32>) -> Vec<f32> {
     for (w,b) in w_vec.iter().zip(b_vec.iter()) {
         a = a.iter().map(|ai| sigmoid(w * ai + b)).collect()
     }
@@ -71,4 +71,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
 
     println!("inputs: {:?}", dataset.inputs);
     println!("inputs: {:?}", dataset.output);
+
+    let f = feedforward(matric.ih_w[0], matric.bias[0], dataset.inputs[0]);
+    println!("{:?}", f)
 }

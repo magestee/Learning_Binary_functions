@@ -8,8 +8,8 @@ use std::io::{self, Write};
 #[derive(Serialize, Deserialize)]
 pub struct DataSet {
     pub mu: usize,
-    pub inputs: Vec<Vec<i32>>,
-    pub output: Vec<i32>,
+    pub inputs: Vec<Vec<f32>>,
+    pub output: Vec<f32>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -41,7 +41,7 @@ pub fn generate_data_set(bits : usize) -> io::Result<()> {
     write_to_json_file(&data_collection, file_path)
 }
 
-fn generate_binary_vectors(n: usize) -> Vec<Vec<i32>> {
+fn generate_binary_vectors(n: usize) -> Vec<Vec<f32>> {
     let num_combinations = 2_usize.pow(n as u32);
     let mut combinations = Vec::with_capacity(num_combinations);
 
@@ -49,9 +49,9 @@ fn generate_binary_vectors(n: usize) -> Vec<Vec<i32>> {
         let mut combination = Vec::with_capacity(n);
         for j in 0..n {
             if (i & (1 << j)) != 0 {
-                combination.insert(0, 1);
+                combination.insert(0, 1.0);
             } else {
-                combination.insert(0, 0);
+                combination.insert(0, 0.0);
             }
         }
         combinations.push(combination);
