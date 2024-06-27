@@ -12,18 +12,13 @@ pub struct NeuralNetwork {
     pub bias: Bias,
 }
 
-pub fn randomly_populate(a: &mut Weights)  {
-    let  mut rng = rand::thread_rng();
-
-    for row in a.iter_mut(){
-        for element in row.iter_mut(){
-            *element = rng.gen();
+pub fn randomly_populate(a: &mut Vec<Vec<f32>>) {
+    let mut rng = rand::thread_rng();
+    for row in a.iter_mut() {
+        for element in row.iter_mut() {
+            *element = rng.gen_range(0.0..1.0);  // Using gen_range to specify the range, typical for NN weights/biases initialization.
         }
     }
-}
-
-fn dot_product(v1: &[f64], v2: &[f64]) -> f64 {
-    v1.iter().zip(v2.iter()).map(|(a, b)| a * b).sum()
 }
 
 pub fn sigmoid(z: f32) -> f32 {
@@ -32,38 +27,39 @@ pub fn sigmoid(z: f32) -> f32 {
     1.0/(1.0 + E.powf(p))
 }
 
-pub fn sigmoid_derivative(z:f32, beta: f32) -> f32 {
-    let s = sigmoid(z);
-    beta * s * (1.0 - s)
-}
-
-pub fn new_network(i: usize, h: usize, o:usize) -> NeuralNetwork{
-    let mut ih_w: Weights = vec![vec![0.0;h];i];
-    let mut ho_w: Weights = vec![vec![0.0;o];h];
-    let bh = vec![0.0;h];
-    let bo = vec![0.0;o];
-
-    let mut bias: Bias = [bh, bo].to_vec(); 
+pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
+    let mut ih_w: Weights = vec![vec![0.0; h]; i];
+    let mut ho_w: Weights = vec![vec![0.0; o]; h];
+    let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; // Ensuring the correct structure for biases.
 
     randomly_populate(&mut ih_w);
     randomly_populate(&mut ho_w);
-    randomly_populate(&mut bias);
+    randomly_populate(&mut bias);  // Now correctly populating biases since bias is Vec<Vec<f32>>
 
-    NeuralNetwork {
-        ih_w,  
-        ho_w,
-        bias
+    NeuralNetwork { ih_w, ho_w, bias }
+}
+/*
+pub fn feedforward(weights: Weights, biases: Bias, inputs: Vec<f32>) -> Vec<f32> {
+    let mut activations = inputs;
+
+    // Iterate through each layer of weights and corresponding biases
+    for (w_layer, b_layer) in weights.iter().zip(biases.iter()) {
+        // Map each neuron's weights and corresponding bias to a new activation
+        let new_activations: Vec<f32> = w_layer.iter().zip(b_layer.iter()).map(|(neuron_weights, &bias)| {
+            // Calculate the sum of weights * inputs and add bias
+            let neuron_output = neuron_weights.iter().zip(&activations)
+                .map(|(&weight, &input)| weight * input) // Multiply each weight by its corresponding input
+                .sum::<f32>() + bias; // Add bias for this neuron
+            sigmoid(neuron_output) // Apply the sigmoid function
+        })
+        .collect();
+
+        activations = new_activations; // Update activations for the next layer
     }
 
+    activations
 }
-
-pub fn feedforward(w_vec: Vec<f32>, b_vec: Vec<f32>, mut a: Vec<f32>) -> Vec<f32> {
-    for (w,b) in w_vec.iter().zip(b_vec.iter()) {
-        a  = a.iter().map(|ai| sigmoid(w * ai + b)).collect();
-    };
-    a
-}
-
+*/
 pub fn process_dataset(dataset: &DataSet, n: usize){
     let matric: NeuralNetwork = new_network(n, 5, 1);
     println!("h_w: {:?}", matric.ih_w);
@@ -73,7 +69,12 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
+    /*
+    let f = feedforward(matric.ih_w.clone(), matric.bias.clone(), dataset.inputs[0].clone());
+    println!("First weight: {:?}", matric.ho_w);
+    println!("First bias: {:?}", matric.bias[0]);
+    println!("First input: {:?}", dataset.inputs[0]);
 
-    let f = feedforward(matric.ih_w[0].clone(), matric.bias[0].clone(), dataset.inputs[0].clone());
-    println!("{:?}", f)
+    println!("{:?}", f);
+    */
 }
