@@ -38,28 +38,22 @@ pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
 
     NeuralNetwork { ih_w, ho_w, bias }
 }
-/*
-pub fn feedforward(weights: Weights, biases: Bias, inputs: Vec<f32>) -> Vec<f32> {
-    let mut activations = inputs;
+pub fn feedforward(weights: Weights, biases: Bias, inputs: Vec<f32>) {
+    let mut a = inputs;
+    for bl in biases.iter(){
+        println!("b layer: {:?}", bl);
+        for (wl, b) in weights.iter().zip(bl.iter()){
+            println!("w layer: {:?}", wl);
+            for w in wl.iter(){
+                println!("w: {:?}", w);
+                println!("b: {:?}", b);
+            } 
+            println!("a: {:?}", a);
 
-    // Iterate through each layer of weights and corresponding biases
-    for (w_layer, b_layer) in weights.iter().zip(biases.iter()) {
-        // Map each neuron's weights and corresponding bias to a new activation
-        let new_activations: Vec<f32> = w_layer.iter().zip(b_layer.iter()).map(|(neuron_weights, &bias)| {
-            // Calculate the sum of weights * inputs and add bias
-            let neuron_output = neuron_weights.iter().zip(&activations)
-                .map(|(&weight, &input)| weight * input) // Multiply each weight by its corresponding input
-                .sum::<f32>() + bias; // Add bias for this neuron
-            sigmoid(neuron_output) // Apply the sigmoid function
-        })
-        .collect();
-
-        activations = new_activations; // Update activations for the next layer
+        }
     }
-
-    activations
 }
-*/
+
 pub fn process_dataset(dataset: &DataSet, n: usize){
     let matric: NeuralNetwork = new_network(n, 5, 1);
     println!("h_w: {:?}", matric.ih_w);
@@ -69,12 +63,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
-    /*
     let f = feedforward(matric.ih_w.clone(), matric.bias.clone(), dataset.inputs[0].clone());
-    println!("First weight: {:?}", matric.ho_w);
-    println!("First bias: {:?}", matric.bias[0]);
-    println!("First input: {:?}", dataset.inputs[0]);
 
     println!("{:?}", f);
-    */
 }
