@@ -59,6 +59,10 @@ impl NeuralNetwork {
 }
 */
 
-pub fn process_dataset(dataset: &DataSet){
-    let matric = new_network(4, 5, 2);
+pub fn process_dataset(dataset: &DataSet, n: usize){
+    let matric: NeuralNetwork = new_network(n, 5, 2);
+    println!("h_w: {:?}", matric.ih_w);
+    println!("o_w: {:?}", matric.ho_w);
+    println!("b: {:?}", matric.bias);
+
 }

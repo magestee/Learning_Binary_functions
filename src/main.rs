@@ -26,10 +26,10 @@ fn main() -> std::io::Result<()> {
 
     match collection {
         Ok(col) => {
-            let datasets_to_process = col.data_sets.iter();
+            let datasets_to_process = col.data_sets.iter().take(1);
 
             for dataset in datasets_to_process {
-                model::process_dataset(dataset);
+                model::process_dataset(dataset, n);
             }
 
         },
