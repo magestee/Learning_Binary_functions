@@ -28,8 +28,8 @@ pub fn sigmoid(z: f32) -> f32 {
 }
 
 pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
-    let mut ih_w: Weights = vec![vec![0.0; h]; i];
-    let mut ho_w: Weights = vec![vec![0.0; o]; h];
+    let mut ih_w: Weights = vec![vec![0.0; i]; h];
+    let mut ho_w: Weights = vec![vec![0.0; h]; o];
     let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; // Ensuring the correct structure for biases.
 
     randomly_populate(&mut ih_w);
@@ -39,23 +39,19 @@ pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
     NeuralNetwork { ih_w, ho_w, bias }
 }
 pub fn feedforward(weights: Weights, biases: Bias, inputs: Vec<f32>) {
-    let mut a = inputs;
-    for bl in biases.iter(){
-        println!("b layer: {:?}", bl);
-        for (wl, b) in weights.iter().zip(bl.iter()){
-            println!("w layer: {:?}", wl);
-            for w in wl.iter(){
-                println!("w: {:?}", w);
-                println!("b: {:?}", b);
-            } 
-            println!("a: {:?}", a);
+    let mut n = 0.0;
+    for (i,wl) in inputs.iter().zip(weights.iter()){
+        for w in wl.iter(){
+            println!("i, w: {:?}, {:?}", i, w);
+            n = w*i;
+            println!("n: {}", n)
 
-        }
+        } 
     }
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let matric: NeuralNetwork = new_network(n, 5, 1);
+    let matric: NeuralNetwork = new_network(n, 3, 1);
     println!("h_w: {:?}", matric.ih_w);
     println!("o_w: {:?}", matric.ho_w);
     println!("b: {:?}", matric.bias);
@@ -63,7 +59,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
-    let f = feedforward(matric.ih_w.clone(), matric.bias.clone(), dataset.inputs[0].clone());
+    let f = feedforward(matric.ih_w.clone(), matric.bias.clone(), dataset.inputs[2].clone());
 
     println!("{:?}", f);
 }
