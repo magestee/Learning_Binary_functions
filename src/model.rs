@@ -3,7 +3,8 @@ type Weights = Vec<Vec<f32>>;
 type Bias = Vec<Vec<f32>>;
 
 use crate::generate_data_set::DataSet;
-use std::{f32::consts::E, iter};
+use core::f32;
+use std::f32::consts::E;
 use rand::Rng;
 
 pub struct NeuralNetwork {
@@ -16,7 +17,7 @@ pub fn randomly_populate(a: &mut Vec<Vec<f32>>) {
     let mut rng = rand::thread_rng();
     for row in a.iter_mut() {
         for element in row.iter_mut() {
-            *element = rng.gen_range(0.0..1.0);  // Using gen_range to specify the range, typical for NN weights/biases initialization.
+            *element = rng.gen_range(0.0..1.0);
         }
     }
 }
@@ -30,15 +31,14 @@ pub fn sigmoid(z: f32) -> f32 {
 pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
     let mut ih_w: Weights = vec![vec![0.0; i]; h];
     let mut ho_w: Weights = vec![vec![0.0; h]; o];
-    let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; // Ensuring the correct structure for biases.
+    let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
 
     randomly_populate(&mut ih_w);
     randomly_populate(&mut ho_w);
-    randomly_populate(&mut bias);  // Now correctly populating biases since bias is Vec<Vec<f32>>
-
+    randomly_populate(&mut bias);  
     NeuralNetwork { ih_w, ho_w, bias }
 }
-pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) {
+pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<f32> {
     let mut n = 0.0;
     let mut a: Vec<f32> = Vec::new();
     for wl in weights.iter(){
@@ -48,8 +48,8 @@ pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) {
         a.push(n);
         n = 0.0;
     };
-    a = a.iter().zip(biases.iter()).map(|(n , w)| n + w).collect();
-    println!("a= {:?}", a)
+    a = a.iter().zip(biases.iter()).map(|(n , b)| n + b).collect();
+    a
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
