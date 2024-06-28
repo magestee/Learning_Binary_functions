@@ -40,13 +40,16 @@ pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
 }
 pub fn feedforward(weights: Weights, biases: Bias, inputs: Vec<f32>) {
     let mut n = 0.0;
-    for (i,wl) in inputs.iter().zip(weights.iter()){
-        for w in wl.iter(){
-            println!("i, w: {:?}, {:?}", i, w);
-            n = w*i;
-            println!("n: {}", n)
-
-        } 
+    let mut a: Vec<f32> = Vec::new();
+    for wl in weights.iter(){
+        for (i,w) in wl.iter().zip(inputs.iter()){
+            println!("i: {}, w: {}", i,w);
+            n += w * i;
+            println!("{}", n)
+        }
+        a.push(n);
+        n = 0.0;
+        println!("a= {:?}", a)
     }
 }
 
