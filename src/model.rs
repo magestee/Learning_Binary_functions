@@ -3,7 +3,7 @@ type Weights = Vec<Vec<f32>>;
 type Bias = Vec<Vec<f32>>;
 
 use crate::generate_data_set::DataSet;
-use std::f32::consts::E;
+use std::{f32::consts::E, iter};
 use rand::Rng;
 
 pub struct NeuralNetwork {
@@ -38,19 +38,18 @@ pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
 
     NeuralNetwork { ih_w, ho_w, bias }
 }
-pub fn feedforward(weights: Weights, biases: Bias, inputs: Vec<f32>) {
+pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) {
     let mut n = 0.0;
     let mut a: Vec<f32> = Vec::new();
     for wl in weights.iter(){
         for (i,w) in wl.iter().zip(inputs.iter()){
-            println!("i: {}, w: {}", i,w);
             n += w * i;
-            println!("{}", n)
         }
         a.push(n);
         n = 0.0;
-        println!("a= {:?}", a)
-    }
+    };
+    a = a.iter().zip(biases.iter()).map(|(n , w)| n + w).collect();
+    println!("a= {:?}", a)
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
@@ -62,7 +61,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
-    let f = feedforward(matric.ih_w.clone(), matric.bias.clone(), dataset.inputs[2].clone());
+    let f = feedforward(matric.ih_w.clone(), matric.bias[0].clone(), dataset.inputs[2].clone());
 
     println!("{:?}", f);
 }
