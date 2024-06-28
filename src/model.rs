@@ -48,7 +48,7 @@ pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<
         a.push(n);
         n = 0.0;
     };
-    a = a.iter().zip(biases.iter()).map(|(n , b)| n + b).collect();
+    a = a.iter().zip(biases.iter()).map(|(n , b)| sigmoid(n + b)).collect();
     a
 }
 
