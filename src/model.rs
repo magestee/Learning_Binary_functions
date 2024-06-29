@@ -11,6 +11,8 @@ use rand::{thread_rng, Rng};
 pub struct NeuralNetwork {
     pub weights: Weights,
     pub bias: Bias,
+    pub weights_empty: Weights,
+    pub bias_empty: Bias
 }
 
 pub fn randomly_populate(a: &mut Vec<Vec<f32>>) {
@@ -31,7 +33,10 @@ pub fn sigmoid(z: f32) -> f32 {
 pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
     let mut ih_w = vec![vec![0.0; i]; h];
     let mut ho_w = vec![vec![0.0; h]; o];
-    let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
+    let mut bias = vec![vec![0.0; h], vec![0.0; o]]; 
+
+    let weights_empty = vec![ih_w.clone(), ho_w.clone()];
+    let bias_empty = bias.clone();
 
     randomly_populate(&mut ih_w);
     randomly_populate(&mut ho_w);
@@ -39,7 +44,7 @@ pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
 
     let weights: Weights = vec![ih_w, ho_w];  
     
-    NeuralNetwork { weights, bias }
+    NeuralNetwork { weights, bias, weights_empty, bias_empty}
 }
 
 pub fn feedforward(weights: Vec<Vec<f32>>, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<f32> {
@@ -68,9 +73,13 @@ pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epo
     mini_batch
 }
 
-pub fn backprop(io: Vec<(Vec<f32>, f32)>, network:&mut NeuralNetwork) {
-    let nebula_iw = network.weights.clone();
-    let nebula_b = network.bias.clone();
+pub fn backprop(x: Vec<f32>, y: f32, network:&mut NeuralNetwork) {
+    let nebula_iw = network.weights_empty.clone();
+    let nebula_b = network.bias_empty.clone();
+    
+    let activation = x;
+    let activations: Vec<f32> = Vec::new();
+    let zs: Vec<f32> = Vec::new();
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
@@ -89,5 +98,6 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
 
     let mini_batch = sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
 
-    backprop(mini_batch, &mut matric)
+    backprop(mini_batch[0].0.clone(), mini_batch[0].1.clone(), &mut matric);
+    print!("{:?}", mini_batch)
 }
