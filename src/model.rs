@@ -57,12 +57,13 @@ pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<
 pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epoch: usize) {
     let mut pairs: Vec<_> = inputs.iter().zip(outputs.iter()).collect();
 
-    let n = mini_batch_size; // num of elements in  mini batches
     let mut rng = thread_rng();
 
     pairs.shuffle(&mut rng);
+    
+    let mini_batch = &mut pairs[0..mini_batch_size];
 
-    println!("{:?}", pairs)
+    println!("{:?}", mini_batch)
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
@@ -78,5 +79,5 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
 
     println!("{:?}", f);
 
-    sgd(dataset.inputs.clone(), dataset.output.clone(), 100);
+    sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
 }
