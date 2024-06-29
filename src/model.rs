@@ -29,20 +29,16 @@ pub fn sigmoid(z: f32) -> f32 {
 }
 
 pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
-    let ih_w = vec![vec![0.0; i]; h];
-    let ho_w = vec![vec![0.0; h]; o];
+    let mut ih_w = vec![vec![0.0; i]; h];
+    let mut ho_w = vec![vec![0.0; h]; o];
+    let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
+
+    randomly_populate(&mut ih_w);
+    randomly_populate(&mut ho_w);
+    randomly_populate(&mut bias);  
 
     let weights: Weights = vec![ih_w, ho_w];  
     
-    let bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
-
-    /*
-    randomly_populate(&mut matric.ih_w);
-    randomly_populate(&mut matric.ho_w);
-    randomly_populate(&mut matric.bias);  
-    */
-
-
     NeuralNetwork { weights, bias }
 }
 
@@ -86,7 +82,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     let matric: NeuralNetwork = new_network(n, 3, 1);
 
     println!("h_w: {:?}", matric.weights[0]);
-    println!("o_w: {:?}", matric.weights[0]);
+    println!("o_w: {:?}", matric.weights[1]);
     println!("b: {:?}", matric.bias);
     
     println!("inputs: {:?}", dataset.inputs);
