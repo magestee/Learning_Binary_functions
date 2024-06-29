@@ -5,7 +5,7 @@ type Bias = Vec<Vec<f32>>;
 use crate::generate_data_set::DataSet;
 use core::f32;
 use std::f32::consts::E;
-//use rand::seq::SliceRandom;
+use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
 
 pub struct NeuralNetwork {
@@ -56,30 +56,25 @@ pub fn feedforward(weights: Vec<Vec<f32>>, biases: Vec<f32>, inputs: Vec<f32>) -
     a
 }
 
-/*
-pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epoch: usize) {
-    let mut pairs: Vec<_> = inputs.iter().zip(outputs.iter()).collect();
+pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epoch: usize) -> Vec<(Vec<f32>, f32)> {
+    let mut pairs: Vec<_> = inputs.into_iter().zip(outputs.into_iter()).collect();
 
     let mut rng = thread_rng();
 
     pairs.shuffle(&mut rng);
     
-    let mini_batch = &mut pairs[0..mini_batch_size];
+    let mini_batch: Vec<_> = pairs.into_iter().take(mini_batch_size).collect();
 
-    println!("{:?}", mini_batch)
+    mini_batch
 }
 
 pub fn backprop(io: Vec<(Vec<f32>, f32)>, network:&mut NeuralNetwork) {
-    let nebula_iw = network.ih_w;
-    let nebula_hw = network.ho_w;
-    let nebula_b = network.bias;
-    
-    let layer_one_activation = 
+    let nebula_iw = network.weights.clone();
+    let nebula_b = network.bias.clone();
 }
-*/
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let matric: NeuralNetwork = new_network(n, 3, 1);
+    let mut matric: NeuralNetwork = new_network(n, 3, 1);
 
     println!("h_w: {:?}", matric.weights[0]);
     println!("o_w: {:?}", matric.weights[1]);
@@ -92,5 +87,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
 
     println!("{:?}", f);
 
-    //sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
+    let mini_batch = sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
+
+    backprop(mini_batch, &mut matric)
 }
