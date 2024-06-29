@@ -30,13 +30,10 @@ pub fn sigmoid(z: f32) -> f32 {
 }
 
 pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
-    let mut ih_w: Weights = vec![vec![0.0; i]; h];
-    let mut ho_w: Weights = vec![vec![0.0; h]; o];
-    let mut bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
+    let ih_w: Weights = vec![vec![0.0; i]; h];
+    let ho_w: Weights = vec![vec![0.0; h]; o];
+    let bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
 
-    randomly_populate(&mut ih_w);
-    randomly_populate(&mut ho_w);
-    randomly_populate(&mut bias);  
     NeuralNetwork { ih_w, ho_w, bias }
 }
 
@@ -66,8 +63,17 @@ pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epo
     println!("{:?}", mini_batch)
 }
 
+pub fn backprob(x, y) {
+    let nebula_w = [];
+    let nebula_b = [];
+}
+
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let matric: NeuralNetwork = new_network(n, 3, 1);
+    let mut matric: NeuralNetwork = new_network(n, 3, 1);
+    randomly_populate(&mut matric.ih_w);
+    randomly_populate(&mut matric.ho_w);
+    randomly_populate(&mut matric.bias);  
+
     println!("h_w: {:?}", matric.ih_w);
     println!("o_w: {:?}", matric.ho_w);
     println!("b: {:?}", matric.bias);
