@@ -1,16 +1,15 @@
 // model.rs
-type Weights = Vec<Vec<f32>>;
+type Weights = Vec<Vec<Vec<f32>>>;
 type Bias = Vec<Vec<f32>>;
 
 use crate::generate_data_set::DataSet;
 use core::f32;
 use std::f32::consts::E;
-use rand::seq::SliceRandom;
+//use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
 
 pub struct NeuralNetwork {
-    pub ih_w: Weights,
-    pub ho_w: Weights,
+    pub weights: Weights,
     pub bias: Bias,
 }
 
@@ -30,14 +29,24 @@ pub fn sigmoid(z: f32) -> f32 {
 }
 
 pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
-    let ih_w: Weights = vec![vec![0.0; i]; h];
-    let ho_w: Weights = vec![vec![0.0; h]; o];
+    let ih_w = vec![vec![0.0; i]; h];
+    let ho_w = vec![vec![0.0; h]; o];
+
+    let weights: Weights = vec![ih_w, ho_w];  
+    
     let bias: Bias = vec![vec![0.0; h], vec![0.0; o]]; 
 
-    NeuralNetwork { ih_w, ho_w, bias }
+    /*
+    randomly_populate(&mut matric.ih_w);
+    randomly_populate(&mut matric.ho_w);
+    randomly_populate(&mut matric.bias);  
+    */
+
+
+    NeuralNetwork { weights, bias }
 }
 
-pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<f32> {
+pub fn feedforward(weights: Vec<Vec<f32>>, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<f32> {
     let mut n = 0.0;
     let mut a: Vec<f32> = Vec::new();
     for wl in weights.iter(){
@@ -51,6 +60,7 @@ pub fn feedforward(weights: Weights, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<
     a
 }
 
+/*
 pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epoch: usize) {
     let mut pairs: Vec<_> = inputs.iter().zip(outputs.iter()).collect();
 
@@ -63,27 +73,28 @@ pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epo
     println!("{:?}", mini_batch)
 }
 
-pub fn backprob(x, y) {
-    let nebula_w = [];
-    let nebula_b = [];
+pub fn backprop(io: Vec<(Vec<f32>, f32)>, network:&mut NeuralNetwork) {
+    let nebula_iw = network.ih_w;
+    let nebula_hw = network.ho_w;
+    let nebula_b = network.bias;
+    
+    let layer_one_activation = 
 }
+*/
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let mut matric: NeuralNetwork = new_network(n, 3, 1);
-    randomly_populate(&mut matric.ih_w);
-    randomly_populate(&mut matric.ho_w);
-    randomly_populate(&mut matric.bias);  
+    let matric: NeuralNetwork = new_network(n, 3, 1);
 
-    println!("h_w: {:?}", matric.ih_w);
-    println!("o_w: {:?}", matric.ho_w);
+    println!("h_w: {:?}", matric.weights[0]);
+    println!("o_w: {:?}", matric.weights[0]);
     println!("b: {:?}", matric.bias);
-
+    
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
-    let f = feedforward(matric.ih_w.clone(), matric.bias[0].clone(), dataset.inputs[2].clone());
+    let f = feedforward(matric.weights[0].clone(), matric.bias[0].clone(), dataset.inputs[2].clone());
 
     println!("{:?}", f);
 
-    sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
+    //sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
 }
