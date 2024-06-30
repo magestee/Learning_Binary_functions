@@ -1,6 +1,8 @@
 // model.rs
 type Weights = Vec<Vec<Vec<f32>>>;
-type Bias = Vec<Vec<f32>>;
+type Biases = Vec<Vec<f32>>;
+type Inputs = Vec<Vec<f32>>;
+type Outputs = Vec<f32>;
 
 use crate::generate_data_set::DataSet;
 use core::f32;
@@ -9,14 +11,16 @@ use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
 
 pub struct NeuralNetwork {
+    pub inputs: Inputs,
+    pub outputs: Outputs,
     pub weights: Weights,
-    pub bias: Bias,
+    pub biases: Biases,
     pub weights_empty: Weights,
-    pub bias_empty: Bias
+    pub bias_empty: Biases
 }
 
 impl NeuralNetwork {
-    pub fn new(i: usize, h: usize, o: usize) -> Self {
+    pub fn new(i: usize, h: usize, o: usize, inputs: Inputs,  outputs: Outputs) -> Self {
         let mut ih_w = vec![vec![0.0; i]; h];
         let mut ho_w = vec![vec![0.0; h]; o];
         let mut bias = vec![vec![0.0; h], vec![0.0; o]]; 
@@ -30,7 +34,7 @@ impl NeuralNetwork {
 
         let weights: Weights = vec![ih_w, ho_w];  
         
-        NeuralNetwork { weights, bias, weights_empty, bias_empty}
+        NeuralNetwork {inputs, outputs,  weights, biases, weights_empty, bias_empty}
     }
 
     pub fn randomly_populate(a: &mut Vec<Vec<f32>>) {
@@ -49,16 +53,16 @@ impl NeuralNetwork {
     }
     
     // TODO: needs to calculate for all the layers.
-    pub fn feedforward(&self, weights: Vec<Vec<f32>>, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<f32> {
+    pub fn feedforward(&mut self) -> Vec<f32> {
         let mut n = 0.0;
         let mut a: Vec<f32> = Vec::new();
-        for wl in weights.iter(){
-            for (i,w) in wl.iter().zip(inputs.iter()){
+        for wl in self.weights[0].into_iter(){
+            for (i,w) in wl.iter().zip(self.inputs.iter()){
                 n += w * i; }
             a.push(n);
             n = 0.0;
         };
-        a = a.iter().zip(biases.iter()).map(|(n , b)| NeuralNetwork::sigmoid(n + b)).collect();
+        a = a.iter().zip(self.biases.iter()).map(|(n , b)| NeuralNetwork::sigmoid(n + b)).collect();
         a
     }
 
@@ -90,7 +94,7 @@ impl NeuralNetwork {
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let mut matrix: NeuralNetwork = NeuralNetwork::new(n, 5, 3);
+    let mut matrix: NeuralNetwork = NeuralNetwork::new(n, 5, 3, dataset.inputs.clone(), dataset.output.clone());
 
     println!("h_w: {:?}", matrix.weights[0]);
     println!("o_w: {:?}", matrix.weights[1]);
@@ -99,7 +103,7 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
-    let f = matrix.feedforward(matrix.weights[0].clone(), matrix.bias[0].clone(), dataset.inputs[2].clone());
+    let f = matrix.feedforward();
 
     println!("{:?}", f);
 
