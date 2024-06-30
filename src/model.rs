@@ -46,7 +46,7 @@ pub fn new_network(i: usize, h: usize, o: usize) -> NeuralNetwork {
     
     NeuralNetwork { weights, bias, weights_empty, bias_empty}
 }
-
+// TODO: needs to calculate for all the layers.
 pub fn feedforward(weights: Vec<Vec<f32>>, biases: Vec<f32>, inputs: Vec<f32>) -> Vec<f32> {
     let mut n = 0.0;
     let mut a: Vec<f32> = Vec::new();
@@ -72,6 +72,8 @@ pub fn sgd(inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epo
 
     mini_batch
 }
+//TODO: must add a function called update_mini_batch that will do the backprop 
+//and updates the mini batch.
 
 pub fn backprop(x: Vec<f32>, y: f32, network:&mut NeuralNetwork) {
     let nebula_iw = network.weights_empty.clone();
@@ -80,6 +82,8 @@ pub fn backprop(x: Vec<f32>, y: f32, network:&mut NeuralNetwork) {
     let activation = x;
     let activations: Vec<f32> = Vec::new();
     let zs: Vec<f32> = Vec::new();
+
+    for (w,b) in
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
