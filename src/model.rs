@@ -21,6 +21,7 @@ pub struct NeuralNetwork {
     pub input_neurons: usize,
     pub hidden_neurons: usize,
     pub output_neurons: usize,
+    pub beta: f32
 }
 
 #[allow(dead_code)]
@@ -30,7 +31,8 @@ impl NeuralNetwork {
                h: usize,
                o: usize,
                inputs: Inputs,
-               outputs: Outputs)
+               outputs: Outputs,
+               beta: f32)
                -> Self {
 
         let mut ih_w = vec![vec![0.0; i]; h];
@@ -55,7 +57,8 @@ impl NeuralNetwork {
             bias_empty,
             input_neurons: i,
             hidden_neurons: h,
-            output_neurons: o
+            output_neurons: o,
+            beta,
         }
     }
 
@@ -68,15 +71,16 @@ impl NeuralNetwork {
         }
     }
 
-    pub fn sigmoid(z: f32) -> f32 {
-        let beta = 1.0;
-        let p = -beta * z;
-        1.0/(1.0 + E.powf(p))
+    pub fn sigmoid(&self, z: f32) -> f32 {
+        let p = -self.beta * z;
+        return 1.0/(1.0 + E.powf(p))
     }
 
-    // TODO: needs to calculate for all the layers.
+    pub fn sigmoid_prime(&self,z: f32) -> f32 {
+       return  self.sigmoid(z) * (1.0 - self.sigmoid(z));
+    }
 
-    pub fn layerforward(inputs: Vec<f32>,
+    pub fn layerforward(&self, inputs: Vec<f32>,
                         weights: Vec<Vec<f32>>,
                         biases: Vec<f32>) 
                         -> Vec<f32> {
@@ -91,21 +95,25 @@ impl NeuralNetwork {
             n = 0.0;
         };
         a = a.iter().zip(biases.iter())
-            .map(|(n , b)| NeuralNetwork::sigmoid(n + b))
+            .map(|(n , b)| self.sigmoid(n + b))
             .collect();
         a
     }
 
-    pub fn feedforward(&mut self, inputs: Vec<f32> ) -> Vec<Vec<f32>> {
+    pub fn feedforward(&mut self,
+                       inputs: Vec<f32>)
+                       -> Vec<Vec<f32>> {
+
         let mut a: Vec<Vec<f32>> = Vec::new();
         a.insert(0, inputs);
         for i in 0..self.weights.len(){
-            a.push(NeuralNetwork::layerforward(a[i].clone(), self.weights[i].clone(), self.biases[i].clone()));
+            a.push(self.layerforward(a[i].clone(),
+                                    self.weights[i].clone(), 
+                                    self.biases[i].clone()));
         }
         a
     }
     
-
     pub fn sgd(&self,
                inputs: Vec<Vec<f32>>,
                outputs: Vec<f32>,
@@ -129,24 +137,42 @@ impl NeuralNetwork {
 
         mini_batch
     }
-    //TODO: must add a function called update_mini_batch that will do the backprop 
+    //TODO: must add a function called update_mini_batch 
+    //that will do the backprop 
+    
     //and updates the mini batch.
+    pub fn updates_mini_batch(&mut self) {
+        let nebula_iw = self.weights_empty.clone();
+        let nebula_b = self.bias_empty.clone();
 
+        for (i, o) in self.inputs.clone().iter().zip(self.outputs.clone().iter()){
+            self.backprop(i.clone(), o.clone());
+        }
+    }
+
+    //TODO: complete the backprop function.
     pub fn backprop(&mut self, x: Vec<f32>, y: f32) {
         let nebula_iw = self.weights_empty.clone();
         let nebula_b = self.bias_empty.clone();
         
-        let activation = x;
-        let activations: Vec<f32> = Vec::new();
-        let zs: Vec<f32> = Vec::new();
+        let zs: Vec<Vec<f32>> = self.feedforward(x);
+
+        println!("zs {:?}", zs);
+        
 
     }
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
     let mut matrix: NeuralNetwork = 
-        NeuralNetwork::new(n, 5, 1, dataset.inputs.clone(), dataset.output.clone());
+        NeuralNetwork::new(n,
+                           5,
+                           1,
+                           dataset.inputs.clone(),
+                           dataset.output.clone(),
+                           1.0);
     
+    matrix.updates_mini_batch()
     /*
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
@@ -155,10 +181,6 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
     println!("b: {:?}", matrix.biases);
     */
 
-    let f = matrix.feedforward(matrix.inputs[1].clone());
-
-    println!("f: {:?}", f);
-    
     /*
     let mini_batch = matrix.sgd(dataset.inputs.clone(), dataset.output.clone(), 1, 100);
 
