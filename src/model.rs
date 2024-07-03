@@ -96,13 +96,13 @@ impl NeuralNetwork {
         a
     }
 
-    pub fn feedforward(&mut self, inputs: Vec<f32> ) {
+    pub fn feedforward(&mut self, inputs: Vec<f32> ) -> Vec<Vec<f32>> {
         let mut a: Vec<Vec<f32>> = Vec::new();
         a.insert(0, inputs);
         for i in 0..self.weights.len(){
             a.push(NeuralNetwork::layerforward(a[i].clone(), self.weights[i].clone(), self.biases[i].clone()));
         }
-        println!("a=  {:?}", a)
+        a
     }
     
 
