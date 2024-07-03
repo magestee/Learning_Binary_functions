@@ -161,6 +161,11 @@ impl NeuralNetwork {
         
 
     }
+
+    pub fn cost_derivative(&self, zs: Vec<f32>, y: Outputs)  {
+        zs
+
+    }
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
