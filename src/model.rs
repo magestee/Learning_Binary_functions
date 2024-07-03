@@ -23,14 +23,14 @@ impl NeuralNetwork {
     pub fn new(i: usize, h: usize, o: usize, inputs: Inputs,  outputs: Outputs) -> Self {
         let mut ih_w = vec![vec![0.0; i]; h];
         let mut ho_w = vec![vec![0.0; h]; o];
-        let mut bias = vec![vec![0.0; h], vec![0.0; o]]; 
+        let mut biases = vec![vec![0.0; h], vec![0.0; o]]; 
 
         let weights_empty = vec![ih_w.clone(), ho_w.clone()];
-        let bias_empty = bias.clone();
+        let bias_empty = biases.clone();
 
         NeuralNetwork::randomly_populate(&mut ih_w);
         NeuralNetwork::randomly_populate(&mut ho_w);
-        NeuralNetwork::randomly_populate(&mut bias);  
+        NeuralNetwork::randomly_populate(&mut biases);  
 
         let weights: Weights = vec![ih_w, ho_w];  
         
@@ -53,6 +53,7 @@ impl NeuralNetwork {
     }
     
     // TODO: needs to calculate for all the layers.
+    /*
     pub fn feedforward(&mut self) -> Vec<f32> {
         let mut n = 0.0;
         let mut a: Vec<f32> = Vec::new();
@@ -65,6 +66,7 @@ impl NeuralNetwork {
         a = a.iter().zip(self.biases.iter()).map(|(n , b)| NeuralNetwork::sigmoid(n + b)).collect();
         a
     }
+    */
 
     #[allow(unused)]
     pub fn sgd(&self, inputs: Vec<Vec<f32>>, outputs: Vec<f32>, mini_batch_size: usize, epoch: usize) -> Vec<(Vec<f32>, f32)> {
@@ -94,15 +96,16 @@ impl NeuralNetwork {
 }
 
 pub fn process_dataset(dataset: &DataSet, n: usize){
-    let mut matrix: NeuralNetwork = NeuralNetwork::new(n, 5, 3, dataset.inputs.clone(), dataset.output.clone());
+    let matrix: NeuralNetwork = NeuralNetwork::new(n, 5, 3, dataset.inputs.clone(), dataset.output.clone());
 
-    println!("h_w: {:?}", matrix.weights[0]);
-    println!("o_w: {:?}", matrix.weights[1]);
-    println!("b: {:?}", matrix.bias);
-    
     println!("inputs: {:?}", dataset.inputs);
     println!("outputs: {:?}", dataset.output);
 
+    println!("w: {:?}", matrix.weights);
+    println!("b: {:?}", matrix.biases);
+    
+
+    /*
     let f = matrix.feedforward();
 
     println!("{:?}", f);
@@ -111,4 +114,5 @@ pub fn process_dataset(dataset: &DataSet, n: usize){
 
     matrix.backprop(mini_batch[0].0.clone(), mini_batch[0].1.clone());
     print!("{:?}", mini_batch)
+    */
 }
