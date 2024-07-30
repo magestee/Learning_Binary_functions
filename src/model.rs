@@ -1,15 +1,18 @@
 // model.rs
+// TYPE DEFINITIONS:
 type Outputs = Vec<f32>;
 type Biases = Vec<Vec<f32>>;
 type Inputs = Vec<Vec<f32>>;
 type Weights = Vec<Vec<Vec<f32>>>;
 
+// LIBRARIES:
 use core::f32;
 use std::f32::consts::E;
 use rand::seq::SliceRandom;
 use rand::{thread_rng, Rng};
 use crate::generate_data_set::DataSet;
 
+// OBJECT OREINTED BUT NOT REALLY OBJECT OREINTED!
 #[allow(unused)]
 pub struct NeuralNetwork {
     pub inputs: Inputs,
@@ -27,6 +30,7 @@ pub struct NeuralNetwork {
 #[allow(dead_code)]
 #[allow(unused)]
 impl NeuralNetwork {
+    // THE FUNCTION RESPONSIBLE FOR CREATING THE NEURAL NET.
     pub fn new(i: usize,
                h: usize,
                o: usize,
@@ -62,6 +66,8 @@ impl NeuralNetwork {
         }
     }
 
+    // FUNCTION THAT RANDOMLY POPULATES THE NEW NET WEIGHT MATRIX
+    // WITH RANDOM VALUES.
     pub fn randomly_populate(a: &mut Vec<Vec<f32>>) {
         let mut rng = rand::thread_rng();
         for row in a.iter_mut() {
@@ -71,15 +77,18 @@ impl NeuralNetwork {
         }
     }
 
+    //SIGMOID FUNCTION AS OUR ACTIVATION FUNCTION
     pub fn sigmoid(&self, z: f32) -> f32 {
         let p = -self.beta * z;
         return 1.0/(1.0 + E.powf(p))
     }
 
+    //THE DERIVATIVE OF THE ACTIVATION FUNCTION
     pub fn sigmoid_prime(&self,z: f32) -> f32 {
        return  self.sigmoid(z) * (1.0 - self.sigmoid(z));
     }
 
+    //THE FUNCTION THAT CALCULATES A LAYER OF FEEDFORWARD
     pub fn layerforward(&self, inputs: Vec<f32>,
                         weights: Vec<Vec<f32>>,
                         biases: Vec<f32>) 
@@ -100,6 +109,8 @@ impl NeuralNetwork {
         a
     }
 
+    //FUNCTION THAT CAlCULATES FEEDFORWARD THROUGH THE NET
+    //ONE LAYER AT A TIME, USING layerforward
     pub fn feedforward(&mut self,
                        inputs: Vec<f32>)
                        -> Vec<Vec<f32>> {
