@@ -84,7 +84,7 @@ impl NeuralNetwork {
     }
 
     //THE DERIVATIVE OF THE ACTIVATION FUNCTION
-    pub fn sigmoid_prime(&self,z: f32) -> f32 {
+    pub fn sigmoid_prime(&self,z: Vec<f32>) -> f32 {
        return  self.sigmoid(z) * (1.0 - self.sigmoid(z));
     }
 
@@ -165,13 +165,8 @@ impl NeuralNetwork {
         
         let zs: Vec<Vec<f32>> = self.feedforward(x);
 
-        let mut cd: Vec<f32> = self.cost_derivative(zs[2].clone());
-        let mut sp: Vec<f32> = self.sigmoid_prime(zs[2][0]);
-
-        let delta: Vec<Vec<f32>> = Vec::new();
-
-        for (c, sp) in cd.iter()
-        print!(" sig prime  {:?}", delta)
+        let delta = self.cost_derivative(zs[2].clone());
+        print!("{:?}", self.sigmoid_prime(zs[2]))
     }
 
     
