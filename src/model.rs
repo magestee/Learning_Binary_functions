@@ -159,6 +159,8 @@ impl NeuralNetwork {
     }
 
     //TODO: complete the backprop function.
+    //FIX: there will be a bug in here since we call backprop on a loop and feed it different zs
+    //but it will always calculate the difference with the same y.
     pub fn backprop(&mut self, x: Vec<f32>, y: f32) {
         let nebula_iw = self.weights_empty.clone();
         let nebula_b = self.bias_empty.clone();
@@ -166,11 +168,11 @@ impl NeuralNetwork {
         let zs: Vec<Vec<f32>> = self.feedforward(x);
 
         let mut cd: Vec<f32> = self.cost_derivative(zs[2].clone());
-        let mut sp: Vec<f32> = self.sigmoid_prime(zs[2][0]);
+        let mut sp = self.sigmoid_prime(zs[2][0]);
 
-        let delta: Vec<Vec<f32>> = Vec::new();
+        let delta = cd[0] * sp; 
 
-        for (c, sp) in cd.iter()
+        //for (c, sp) in cd.iter()
         print!(" sig prime  {:?}", delta)
     }
 
