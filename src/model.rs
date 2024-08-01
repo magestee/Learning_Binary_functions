@@ -163,26 +163,25 @@ impl NeuralNetwork {
     //but it will always calculate the difference with the same y.
     pub fn backprop(&mut self, x: Vec<f32>, y: f32) {
         let nebula_iw = self.weights_empty.clone();
-        let nebula_b = self.bias_empty.clone();
+        let mut nebula_b = self.bias_empty.clone();
         
         let zs: Vec<Vec<f32>> = self.feedforward(x);
 
-        let mut cd: Vec<f32> = self.cost_derivative(zs[2].clone());
+        let mut cd: f32 = self.cost_derivative(zs[2][0].clone(), y);
         let mut sp = self.sigmoid_prime(zs[2][0]);
 
-        let delta = cd[0] * sp; 
+        let delta = cd * sp; 
+
+        nebula_b.insert(1, vec![delta]);
 
         //for (c, sp) in cd.iter()
-        print!(" sig prime  {:?}", delta)
+        print!(" b  {:?}", nebula_b)
     }
 
     
-    pub fn cost_derivative(&self, zs: Vec<f32>)  -> Vec<f32>{
-        let mut cd: Vec<f32> = Vec::new();
-        for (z, y) in zs.clone().iter().zip(self.outputs.clone().iter()){
-            cd.push(z-y)
-        }
-        cd
+    //Bug!
+    pub fn cost_derivative(&self, z: f32, y: f32)  -> f32{
+        z-y
     }
 }
 
