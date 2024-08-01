@@ -1,4 +1,8 @@
 // model.rs
+//TODO:
+// - write a utility function for transpose.
+// - write a utilitu function for dot product.
+// - use wrapping sub for l-1 in backprop code.
 // TYPE DEFINITIONS:
 type Outputs = Vec<f32>;
 type Biases = Vec<Vec<f32>>;
@@ -159,8 +163,6 @@ impl NeuralNetwork {
     }
 
     //TODO: complete the backprop function.
-    //FIX: there will be a bug in here since we call backprop on a loop and feed it different zs
-    //but it will always calculate the difference with the same y.
     pub fn backprop(&mut self, x: Vec<f32>, y: f32) {
         let nebula_iw = self.weights_empty.clone();
         let mut nebula_b = self.bias_empty.clone();
@@ -173,13 +175,11 @@ impl NeuralNetwork {
         let delta = cd * sp; 
 
         nebula_b.insert(1, vec![delta]);
+        nebula_w.insert(2, )
 
-        //for (c, sp) in cd.iter()
         print!(" b  {:?}", nebula_b)
     }
 
-    
-    //Bug!
     pub fn cost_derivative(&self, z: f32, y: f32)  -> f32{
         z-y
     }
