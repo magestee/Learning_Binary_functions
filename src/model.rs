@@ -100,6 +100,10 @@ impl NeuralNetwork {
         o
     }
 
+    pub fn hamard(a: Vec<f32>, b: Vec<f32>) -> Vec<f32> {
+        a.iter().zip(b).map(|(ai, bi)| ai * bi).collect()
+    }
+
     //SIGMOID FUNCTION AS OUR ACTIVATION FUNCTION
     pub fn sigmoid(&self, z: f32) -> f32 {
         let p = -self.beta * z;
