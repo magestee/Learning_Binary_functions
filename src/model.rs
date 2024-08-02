@@ -81,6 +81,28 @@ impl NeuralNetwork {
         }
     }
 
+    pub fn transpose(matrix: Vec<Vec<f32>>) -> Vec<Vec<f32>> {
+       let rows = matrix.len();
+       let cols = matrix[0].len();
+       let mut transpose = vec![vec![0.0; rows]; cols];
+
+       for i in 0..rows {
+           for j in 0..cols {
+               transpose[j][i] = matrix[i][j];
+           }
+       }
+
+       transpose
+    }
+
+    pub fn dot(a: Vec<f32>, b: Vec<f32>) -> f32 {
+        let mut o = 0.0;
+        for (i, j) in a.iter().zip(b.iter()) {
+            o = i * j
+        }
+        o
+    }
+
     //SIGMOID FUNCTION AS OUR ACTIVATION FUNCTION
     pub fn sigmoid(&self, z: f32) -> f32 {
         let p = -self.beta * z;
@@ -164,7 +186,7 @@ impl NeuralNetwork {
 
     //TODO: complete the backprop function.
     pub fn backprop(&mut self, x: Vec<f32>, y: f32) {
-        let nebula_iw = self.weights_empty.clone();
+        let mut nebula_iw= self.weights_empty.clone();
         let mut nebula_b = self.bias_empty.clone();
         
         let zs: Vec<Vec<f32>> = self.feedforward(x);
@@ -173,11 +195,12 @@ impl NeuralNetwork {
         let mut sp = self.sigmoid_prime(zs[2][0]);
 
         let delta = cd * sp; 
+        let iw = vec![NeuralNetwork::dot(vec![delta] , zs[2].clone())];
+
+        print!(" z  {:?}", iw);
 
         nebula_b.insert(1, vec![delta]);
-        nebula_w.insert(2, )
-
-        print!(" b  {:?}", nebula_b)
+        nebula_iw.insert(2, vec![iw]);
     }
 
     pub fn cost_derivative(&self, z: f32, y: f32)  -> f32{
